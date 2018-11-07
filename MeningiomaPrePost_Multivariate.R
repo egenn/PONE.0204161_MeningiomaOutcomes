@@ -7,12 +7,6 @@ library(rtemis)
 
 # [ ALL DATA ] ====
 men <- readRDS("./Data/meningioma_prepost.rds")
-str(men$preop.lf)
-str(men$postop.lf)
-str(men$prepost.lf)
-str(men$preop.os)
-str(men$postop.os)
-str(men$prepost.os)
 outpath <- "./Results/Multivariate"
 dir.create(outpath, recursive = TRUE)
 
@@ -21,33 +15,33 @@ resampler <- rtSet.resampler("strat.sub", 100, seed = 4221)
 
 # [ PREOPERATIVE LF ] ====
 # GLM
-preop.lf.glm.100ss <- learnCV(men$preop.lf, mod = "glm",
+preop.lf.glm.100ss <- elevate(men$preop.lf, mod = "glm",
                               params = list(upsample = TRUE),
                               resampler.rtSet = resampler, save.mods = FALSE,
                               outdir = paste0(outpath, "/preop.lf_100ss/preop.lf_glm.100ss"))
 
 # GLMNET
-preop.lf.glmnet.100ss <- learnCV(men$preop.lf, mod = "glmnet",
+preop.lf.glmnet.100ss <- elevate(men$preop.lf, mod = "glmnet",
                                  params = list(upsample = TRUE),
                                  resampler.rtSet = resampler, save.mods = FALSE,
                                  outdir = paste0(outpath, "/preop.lf_100ss/preop.lf_glmnet.100ss"))
 
 # SVM
-preop.lf.svm.100ss <- learnCV(men$preop.lf, mod = "svm",
+preop.lf.svm.100ss <- elevate(men$preop.lf, mod = "svm",
                               params = list(upsample = TRUE,
                                             gamma = c(1/17, 1/17*.1, 1/17*.01)),
                               resampler.rtSet = resampler, save.mods = FALSE,
                               outdir = paste0(outpath, "/preop.lf_100ss/preop.lf_svm.100ss"))
 
 # CART
-preop.lf.cart.100ss <- learnCV(men$preop.lf, mod = "cart",
+preop.lf.cart.100ss <- elevate(men$preop.lf, mod = "cart",
                                params = list(upsample = TRUE, maxdepth = 30,
                                              prune.cp = c(.1, .05, .01)),
                                resampler.rtSet = resampler, save.mods = FALSE,
                                outdir = paste0(outpath, "/preop.lf_100ss/preop.lf_cart.100ss"))
 
 # MDB
-preop.lf.mdb.100ss <- learnCV(men$preop.lf, mod = "mdb",
+preop.lf.mdb.100ss <- elevate(men$preop.lf, mod = "mdb",
                               params = list(upsample = TRUE,
                                             gamma = seq(.6, 1, .2),
                                             max.depth = 30,
@@ -56,13 +50,13 @@ preop.lf.mdb.100ss <- learnCV(men$preop.lf, mod = "mdb",
                               outdir = paste0(outpath, "/preop.lf_100ss/preop.lf_mdb.100ss"))
 
 # RF
-preop.lf.rf.100ss <- learnCV(men$preop.lf, mod = "ranger",
+preop.lf.rf.100ss <- elevate(men$preop.lf, mod = "ranger",
                              params = list(upsample = TRUE),
                              resampler.rtSet = resampler, save.mods = FALSE,
                              outdir = paste0(outpath, "/preop.lf_100ss/preop.lf_rf.100ss"))
 
 # GBM
-preop.lf.gbm.100ss <- learnCV(men$preop.lf, mod = "gbm",
+preop.lf.gbm.100ss <- elevate(men$preop.lf, mod = "gbm",
                               params = list(upsample = TRUE,
                                             interaction.depth = 1:2,
                                             n.minobsinnode = 2),
@@ -71,33 +65,33 @@ preop.lf.gbm.100ss <- learnCV(men$preop.lf, mod = "gbm",
 
 # [ CONVENTIONAL LF ] ====
 # GLM
-postop.lf.glm.100ss <- learnCV(men$postop.lf, mod = "glm",
+postop.lf.glm.100ss <- elevate(men$postop.lf, mod = "glm",
                                params = list(upsample = TRUE),
                                resampler.rtSet = resampler, save.mods = FALSE,
                                outdir = paste0(outpath, "/postop.lf_100ss/postop.lf_glm.100ss"))
 
 # GLMNET
-postop.lf.glmnet.100ss <- learnCV(men$postop.lf, mod = "glmnet",
+postop.lf.glmnet.100ss <- elevate(men$postop.lf, mod = "glmnet",
                                   params = list(upsample = TRUE),
                                   resampler.rtSet = resampler, save.mods = FALSE,
                                   outdir = paste0(outpath, "/postop.lf_100ss/postop.lf_glmnet.100ss"))
 
 # SVM
-postop.lf.svm.100ss <- learnCV(men$postop.lf, mod = "svm",
+postop.lf.svm.100ss <- elevate(men$postop.lf, mod = "svm",
                                params = list(upsample = TRUE,
                                              gamma = c(1/6, 1/6*.1, 1/6*.01)),
                                resampler.rtSet = resampler, save.mods = FALSE,
                                outdir = paste0(outpath, "/postop.lf_100ss/postop.lf_svm.100ss"))
 
 # CART
-postop.lf.cart.100ss <- learnCV(men$postop.lf, mod = "cart",
+postop.lf.cart.100ss <- elevate(men$postop.lf, mod = "cart",
                                 params = list(upsample = TRUE, maxdepth = 30,
                                               prune.cp = c(.1, .05, .01)),
                                 resampler.rtSet = resampler, save.mods = FALSE,
                                 outdir = paste0(outpath, "/postop.lf_100ss/postop.lf_cart.100ss"))
 
 # MDB
-postop.lf.mdb.100ss <- learnCV(men$postop.lf, mod = "mdb",
+postop.lf.mdb.100ss <- elevate(men$postop.lf, mod = "mdb",
                                params = list(upsample = TRUE,
                                              gamma = seq(.6, 1, .2),
                                              max.depth = 30,
@@ -106,13 +100,13 @@ postop.lf.mdb.100ss <- learnCV(men$postop.lf, mod = "mdb",
                                outdir = paste0(outpath, "/postop.lf_100ss/postop.lf_mdb.100ss"))
 
 # RF
-postop.lf.rf.100ss <- learnCV(men$postop.lf, mod = "ranger",
+postop.lf.rf.100ss <- elevate(men$postop.lf, mod = "ranger",
                               params = list(upsample = TRUE),
                               resampler.rtSet = resampler, save.mods = FALSE,
                               outdir = paste0(outpath, "/postop.lf_100ss/postop.lf_rf.100ss"))
 
 # GBM
-postop.lf.gbm.100ss <- learnCV(men$postop.lf, mod = "gbm",
+postop.lf.gbm.100ss <- elevate(men$postop.lf, mod = "gbm",
                                params = list(upsample = TRUE,
                                              interaction.depth = 1:2,
                                              n.minobsinnode = 2),
@@ -121,33 +115,33 @@ postop.lf.gbm.100ss <- learnCV(men$postop.lf, mod = "gbm",
 
 # [ INTEGRATED LF ] ====
 # GLM
-prepost.lf.glm.100ss <- learnCV(men$prepost.lf, mod = "glm",
+prepost.lf.glm.100ss <- elevate(men$prepost.lf, mod = "glm",
                                 params = list(upsample = TRUE),
                                 resampler.rtSet = resampler, save.mods = FALSE,
                                 outdir = paste0(outpath, "/prepost.lf_100ss/prepost.lf_glm.100ss"))
 
 # GLMNET
-prepost.lf.glmnet.100ss <- learnCV(men$prepost.lf, mod = "glmnet",
+prepost.lf.glmnet.100ss <- elevate(men$prepost.lf, mod = "glmnet",
                                    params = list(upsample = TRUE),
                                    resampler.rtSet = resampler, save.mods = FALSE,
                                    outdir = paste0(outpath, "/prepost.lf_100ss/prepost.lf_glmnet.100ss"))
 
 # SVM
-prepost.lf.svm.100ss <- learnCV(men$prepost.lf, mod = "svm",
+prepost.lf.svm.100ss <- elevate(men$prepost.lf, mod = "svm",
                                 params = list(upsample = TRUE,
                                               gamma = c(1/20, 1/20*.1, 1/20*.01)),
                                 resampler.rtSet = resampler, save.mods = FALSE,
                                 outdir = paste0(outpath, "/prepost.lf_100ss/prepost.lf_svm.100ss"))
 
 # CART
-prepost.lf.cart.100ss <- learnCV(men$prepost.lf, mod = "cart",
+prepost.lf.cart.100ss <- elevate(men$prepost.lf, mod = "cart",
                                  params = list(upsample = TRUE, maxdepth = 30,
                                                prune.cp = c(.1, .05, .01)),
                                  resampler.rtSet = resampler, save.mods = FALSE,
                                  outdir = paste0(outpath, "/prepost.lf_100ss/prepost.lf_cart.100ss"))
 
 # MDB
-prepost.lf.mdb.100ss <- learnCV(men$prepost.lf, mod = "mdb",
+prepost.lf.mdb.100ss <- elevate(men$prepost.lf, mod = "mdb",
                                 params = list(upsample = TRUE,
                                               gamma = seq(.6, 1, .2),
                                               max.depth = 30,
@@ -156,13 +150,13 @@ prepost.lf.mdb.100ss <- learnCV(men$prepost.lf, mod = "mdb",
                                 outdir = paste0(outpath, "/prepost.lf_100ss/prepost.lf_mdb.100ss"))
 
 # RF
-prepost.lf.rf.100ss <- learnCV(men$prepost.lf, mod = "ranger",
+prepost.lf.rf.100ss <- elevate(men$prepost.lf, mod = "ranger",
                                params = list(upsample = TRUE),
                                resampler.rtSet = resampler, save.mods = FALSE,
                                outdir = paste0(outpath, "/prepost.lf_100ss/prepost.lf_rf.100ss"))
 
 # GBM
-prepost.lf.gbm.100ss <- learnCV(men$prepost.lf, mod = "gbm",
+prepost.lf.gbm.100ss <- elevate(men$prepost.lf, mod = "gbm",
                                 params = list(upsample = TRUE,
                                               interaction.depth = 1:2,
                                               n.minobsinnode = 2),
@@ -171,33 +165,33 @@ prepost.lf.gbm.100ss <- learnCV(men$prepost.lf, mod = "gbm",
 
 # [ PREOPERATIVE OS ] ====
 # GLM
-preop.os.glm.100ss <- learnCV(men$preop.os, mod = "glm",
+preop.os.glm.100ss <- elevate(men$preop.os, mod = "glm",
                               params = list(upsample = TRUE),
                               resampler.rtSet = resampler, save.mods = FALSE,
                               outdir = paste0(outpath, "/preop.os_100ss/preop.os_glm.100ss"))
 
 # GLMNET
-preop.os.glmnet.100ss <- learnCV(men$preop.os, mod = "glmnet",
+preop.os.glmnet.100ss <- elevate(men$preop.os, mod = "glmnet",
                                  params = list(upsample = TRUE),
                                  resampler.rtSet = resampler, save.mods = FALSE,
                                  outdir = paste0(outpath, "/preop.os_100ss/preop.os_glmnet.100ss"))
 
 # SVM
-preop.os.svm.100ss <- learnCV(men$preop.os, mod = "svm",
+preop.os.svm.100ss <- elevate(men$preop.os, mod = "svm",
                               params = list(upsample = TRUE,
                                             gamma = c(1/17, 1/17*.1, 1/17*.01)),
                               resampler.rtSet = resampler, save.mods = FALSE,
                               outdir = paste0(outpath, "/preop.os_100ss/preop.os_svm.100ss"))
 
 # CART
-preop.os.cart.100ss <- learnCV(men$preop.os, mod = "cart",
+preop.os.cart.100ss <- elevate(men$preop.os, mod = "cart",
                                params = list(upsample = TRUE, maxdepth = 30,
                                              prune.cp = c(.1, .05, .01)),
                                resampler.rtSet = resampler, save.mods = FALSE,
                                outdir = paste0(outpath, "/preop.os_100ss/preop.os_cart.100ss"))
 
 # MDB
-preop.os.mdb.100ss <- learnCV(men$preop.os, mod = "mdb",
+preop.os.mdb.100ss <- elevate(men$preop.os, mod = "mdb",
                               params = list(upsample = TRUE,
                                             gamma = seq(.6, 1, .2),
                                             max.depth = 30,
@@ -206,13 +200,13 @@ preop.os.mdb.100ss <- learnCV(men$preop.os, mod = "mdb",
                               outdir = paste0(outpath, "/preop.os_100ss/preop.os_mdb.100ss"))
 
 # RF
-preop.os.rf.100ss <- learnCV(men$preop.os, mod = "ranger",
+preop.os.rf.100ss <- elevate(men$preop.os, mod = "ranger",
                              params = list(upsample = TRUE),
                              resampler.rtSet = resampler, save.mods = FALSE,
                              outdir = paste0(outpath, "/preop.os_100ss/preop.os_rf.100ss"))
 
 # GBM
-preop.os.gbm.100ss <- learnCV(men$preop.os, mod = "gbm",
+preop.os.gbm.100ss <- elevate(men$preop.os, mod = "gbm",
                               params = list(upsample = TRUE,
                                             interaction.depth = 1:2,
                                             n.minobsinnode = 2),
@@ -221,33 +215,33 @@ preop.os.gbm.100ss <- learnCV(men$preop.os, mod = "gbm",
 
 # [ CONVENTIONAL OS ] ====
 # GLM
-postop.os.glm.100ss <- learnCV(men$postop.os, mod = "glm",
+postop.os.glm.100ss <- elevate(men$postop.os, mod = "glm",
                                params = list(upsample = TRUE),
                                resampler.rtSet = resampler, save.mods = FALSE,
                                outdir = paste0(outpath, "/postop.os_100ss/postop.os_glm.100ss"))
 
 # GLMNET
-postop.os.glmnet.100ss <- learnCV(men$postop.os, mod = "glmnet",
+postop.os.glmnet.100ss <- elevate(men$postop.os, mod = "glmnet",
                                   params = list(upsample = TRUE),
                                   resampler.rtSet = resampler, save.mods = FALSE,
                                   outdir = paste0(outpath, "/postop.os_100ss/postop.os_glmnet.100ss"))
 
 # SVM
-postop.os.svm.100ss <- learnCV(men$postop.os, mod = "svm",
+postop.os.svm.100ss <- elevate(men$postop.os, mod = "svm",
                                params = list(upsample = TRUE,
                                              gamma = c(1/6, 1/6*.1, 1/6*.01)),
                                resampler.rtSet = resampler, save.mods = FALSE,
                                outdir = paste0(outpath, "/postop.os_100ss/postop.os_svm.100ss"))
 
 # CART
-postop.os.cart.100ss <- learnCV(men$postop.os, mod = "cart",
+postop.os.cart.100ss <- elevate(men$postop.os, mod = "cart",
                                 params = list(upsample = TRUE, maxdepth = 30,
                                               prune.cp = c(.1, .05, .01)),
                                 resampler.rtSet = resampler, save.mods = FALSE,
                                 outdir = paste0(outpath, "/postop.os_100ss/postop.os_cart.100ss"))
 
 # MDB
-postop.os.mdb.100ss <- learnCV(men$postop.os, mod = "mdb",
+postop.os.mdb.100ss <- elevate(men$postop.os, mod = "mdb",
                                params = list(upsample = TRUE,
                                              gamma = seq(.6, 1, .2),
                                              max.depth = 30,
@@ -256,13 +250,13 @@ postop.os.mdb.100ss <- learnCV(men$postop.os, mod = "mdb",
                                outdir = paste0(outpath, "/postop.os_100ss/postop.os_mdb.100ss"))
 
 # RF
-postop.os.rf.100ss <- learnCV(men$postop.os, mod = "ranger",
+postop.os.rf.100ss <- elevate(men$postop.os, mod = "ranger",
                               params = list(upsample = TRUE),
                               resampler.rtSet = resampler, save.mods = FALSE,
                               outdir = paste0(outpath, "/postop.os_100ss/postop.os_rf.100ss"))
 
 # GBM
-postop.os.gbm.100ss <- learnCV(men$postop.os, mod = "gbm",
+postop.os.gbm.100ss <- elevate(men$postop.os, mod = "gbm",
                                params = list(upsample = TRUE,
                                              interaction.depth = 1:2,
                                              n.minobsinnode = 2),
@@ -271,33 +265,33 @@ postop.os.gbm.100ss <- learnCV(men$postop.os, mod = "gbm",
 
 # [ INTEGRATED OS ] ====
 # GLM
-prepost.os.glm.100ss <- learnCV(men$prepost.os, mod = "glm",
+prepost.os.glm.100ss <- elevate(men$prepost.os, mod = "glm",
                                 params = list(upsample = TRUE),
                                 resampler.rtSet = resampler, save.mods = FALSE,
                                 outdir = paste0(outpath, "/prepost.os_100ss/prepost.os_glm.100ss"))
 
 # GLMNET
-prepost.os.glmnet.100ss <- learnCV(men$prepost.os, mod = "glmnet",
+prepost.os.glmnet.100ss <- elevate(men$prepost.os, mod = "glmnet",
                                    params = list(upsample = TRUE),
                                    resampler.rtSet = resampler, save.mods = FALSE,
                                    outdir = paste0(outpath, "/prepost.os_100ss/prepost.os_glmnet.100ss"))
 
 # SVM
-prepost.os.svm.100ss <- learnCV(men$prepost.os, mod = "svm",
+prepost.os.svm.100ss <- elevate(men$prepost.os, mod = "svm",
                                 params = list(upsample = TRUE,
                                               gamma = c(1/20, 1/20*.1, 1/20*.01)),
                                 resampler.rtSet = resampler, save.mods = FALSE,
                                 outdir = paste0(outpath, "/prepost.os_100ss/prepost.os_svm.100ss"))
 
 # CART
-prepost.os.cart.100ss <- learnCV(men$prepost.os, mod = "cart",
+prepost.os.cart.100ss <- elevate(men$prepost.os, mod = "cart",
                                  params = list(upsample = TRUE, maxdepth = 30,
                                                prune.cp = c(.1, .05, .01)),
                                  resampler.rtSet = resampler, save.mods = FALSE,
                                  outdir = paste0(outpath, "/prepost.os_100ss/prepost.os_cart.100ss"))
 
 # MDB
-prepost.os.mdb.100ss <- learnCV(men$prepost.os, mod = "mdb",
+prepost.os.mdb.100ss <- elevate(men$prepost.os, mod = "mdb",
                                 params = list(upsample = TRUE,
                                               gamma = seq(.6, 1, .2),
                                               max.depth = 30,
@@ -306,13 +300,13 @@ prepost.os.mdb.100ss <- learnCV(men$prepost.os, mod = "mdb",
                                 outdir = paste0(outpath, "/prepost.os_100ss/prepost.os_mdb.100ss"))
 
 # RF
-prepost.os.rf.100ss <- learnCV(men$prepost.os, mod = "ranger",
+prepost.os.rf.100ss <- elevate(men$prepost.os, mod = "ranger",
                                params = list(upsample = TRUE),
                                resampler.rtSet = resampler, save.mods = FALSE,
                                outdir = paste0(outpath, "/prepost.os_100ss/prepost.os_rf.100ss"))
 
 # GBM
-prepost.os.gbm.100ss <- learnCV(men$prepost.os, mod = "gbm",
+prepost.os.gbm.100ss <- elevate(men$prepost.os, mod = "gbm",
                                 params = list(upsample = TRUE,
                                               interaction.depth = 1:2,
                                               n.minobsinnode = 2),
